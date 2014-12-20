@@ -60,7 +60,7 @@
 #cmakedefine HAVE_UNISTD_H
 
 /* Enable classes using zlib compression. */
-#cmakedefine HAVE_ZLIB
+#cmakedefine HAVE_ZLIB @HAVE_ZLIB@
 
 /* Define to the sub-directory in which libtool stores uninstalled libraries.
    */

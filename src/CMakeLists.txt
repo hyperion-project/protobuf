@@ -164,21 +164,21 @@ if (HAVE_STDLIB_H AND HAVE_STDDEF_H)
  set(STDC_HEADERS 1)
 endif ()
 
-# Include directories for this project
-if (ZLIB_FOUND)
-  include_directories(${ZLIB_INCLUDE_DIRS})
-  set(HAVE_ZLIB)
-endif ()
-
-# Config config.h.cmake.in
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake.in
-               ${CMAKE_CURRENT_BINARY_DIR}/config.h)
-
 include_directories(
  ${CMAKE_CURRENT_BINARY_DIR}
  ${CMAKE_CURRENT_SOURCE_DIR}
  ${CMAKE_SOURCE_DIR}
  ${CMAKE_SOURCE_DIR}/..)
+
+# Include directories for this project
+if (ZLIB_FOUND)
+  include_directories(${ZLIB_INCLUDE_DIRS})
+  set(HAVE_ZLIB 1)
+endif ()
+
+# Config config.h.cmake.in
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake.in
+               ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
 # Targets ==============================================================
 # protobuf library
@@ -329,18 +329,26 @@ IF(NOT CMAKE_CROSSCOMPILING)
 ENDIF(NOT CMAKE_CROSSCOMPILING)
 
 IF(NOT CMAKE_CROSSCOMPILING)
-  export(TARGETS protobuf protobuf-lite protoc_lib protoc_compiler
-         APPEND FILE "${PROTOBUF_EXPORTS_FILE}")
-ELSE(NOT CMAKE_CROSSCOMPILING)
-  export(TARGETS protobuf protobuf-lite
-         APPEND FILE "${PROTOBUF_EXPORTS_FILE}")
-ENDIF(NOT CMAKE_CROSSCOMPILING)
+    export(TARGETS protobuf protobuf-lite protoc_lib protoc_compiler
+      APPEND FILE "${PROTOBUF_EXPORTS_FILE}")
 
-install (TARGETS protobuf protobuf-lite protoc_lib protoc_compiler
-  EXPORT ${PROTOBUF_INSTALL_EXPORT_NAME}
-  RUNTIME DESTINATION ${PROTOBUF_INSTALL_BIN_DIR} COMPONENT Runtime
-  LIBRARY DESTINATION ${PROTOBUF_INSTALL_LIB_DIR} COMPONENT Runtime
-  ARCHIVE DESTINATION ${PROTOBUF_INSTALL_LIB_DIR} COMPONENT Development)
+    install (TARGETS protobuf protobuf-lite protoc_lib protoc_compiler
+      EXPORT ${PROTOBUF_INSTALL_EXPORT_NAME}
+      RUNTIME DESTINATION ${PROTOBUF_INSTALL_BIN_DIR} COMPONENT Runtime
+      LIBRARY DESTINATION ${PROTOBUF_INSTALL_LIB_DIR} COMPONENT Runtime
+      ARCHIVE DESTINATION ${PROTOBUF_INSTALL_LIB_DIR} COMPONENT Development)
+
+ELSE(NOT CMAKE_CROSSCOMPILING)
+    export(TARGETS protobuf protobuf-lite
+      APPEND FILE "${PROTOBUF_EXPORTS_FILE}")
+
+    install (TARGETS protobuf protobuf-lite
+      EXPORT ${PROTOBUF_INSTALL_EXPORT_NAME}
+      RUNTIME DESTINATION ${PROTOBUF_INSTALL_BIN_DIR} COMPONENT Runtime
+      LIBRARY DESTINATION ${PROTOBUF_INSTALL_LIB_DIR} COMPONENT Runtime
+      ARCHIVE DESTINATION ${PROTOBUF_INSTALL_LIB_DIR} COMPONENT Development)
+
+ENDIF(NOT CMAKE_CROSSCOMPILING)
 
 IF(COMPILE_TOOLS_TARGET)
   ADD_DEPENDENCIES(${COMPILE_TOOLS_TARGET} protoc_compiler)
