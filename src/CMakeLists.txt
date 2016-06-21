@@ -321,7 +321,16 @@ IF(NOT CMAKE_CROSSCOMPILING)
    target_link_libraries(protoc_compiler
                          protoc_lib
                          ${THREAD_LINK_LIB})
+
+   if ( POLICY CMP0026 )
+     cmake_policy( PUSH )
+     cmake_policy( SET CMP0026 OLD )
+   endif()
    get_target_property(protoc_compiler_location protoc_compiler LOCATION)
+   if ( POLICY CMP0026 )
+      cmake_policy( POP )
+   endif()
+
    if (WIN32 AND BUILD_SHARED_LIBS)
      set_target_properties(protoc_lib PROPERTIES
        COMPILE_DEFINITIONS "LIBPROTOC_EXPORTS;PROTOBUF_USE_DLLS")
