@@ -318,6 +318,8 @@ IF(NOT CMAKE_CROSSCOMPILING)
 
    set_target_properties(protoc_compiler PROPERTIES
                          OUTPUT_NAME     protoc)
+   set_target_properties(protoc_lib PROPERTIES
+                         OUTPUT_NAME     protoc)
    target_link_libraries(protoc_compiler
                          protoc_lib
                          ${THREAD_LINK_LIB})
@@ -358,6 +360,8 @@ ELSE(NOT CMAKE_CROSSCOMPILING)
       ARCHIVE DESTINATION ${PROTOBUF_INSTALL_LIB_DIR} COMPONENT Development)
 
 ENDIF(NOT CMAKE_CROSSCOMPILING)
+
+install (DIRECTORY google DESTINATION ${PROTOBUF_INSTALL_INCLUDE_DIR} FILES_MATCHING PATTERN "*.h")
 
 IF(COMPILE_TOOLS_TARGET)
   ADD_DEPENDENCIES(${COMPILE_TOOLS_TARGET} protoc_compiler)
